@@ -34,6 +34,15 @@ The main idea of the task is to build an uptime monitoring RESTful API server wh
   - `tags` - A list of the check tags (optional).
   - `ignoreSSL` - A flag to ignore broken/expired SSL certificates in case of using the HTTPS protocol.
 
+- Each report may have the following information:
+  - `status` - The current status of the URL.
+  - `availability` - A percentage of the URL availability.
+  - `outages` - The total number of URL downtimes.
+  - `downtime` - The total time, in seconds, of the URL downtime.
+  - `uptime` - The total time, in seconds, of the URL uptime.
+  - `responseTime` - The average response time for the URL.
+  - `history` - Timestamped logs of the polling requests.
+
 ## Expectations
 
 - Code quality.
@@ -42,9 +51,9 @@ The main idea of the task is to build an uptime monitoring RESTful API server wh
 
 ## Bonus
 
-1. Swagger API documentation.
-2. Code linting.
-3. Docker.
-4. [Pushover](https://pushover.net/) integration to receive alerts on mobile devices.
+- Swagger API documentation.
+- Code linting.
+- Docker.
+- [Pushover](https://pushover.net/) integration to receive alerts on mobile devices.
 
 Try your best to implement as much as you can from the given features and feel free to add more if you want to.
