@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const helmet = require("helmet");
 const cors = require("cors");
-const hpp = require("hpp");
+const hpp = require('hpp');
 const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize"); // for nosql injection
 const xxs = require("xss-clean"); // for injection
@@ -13,6 +13,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
 const Config = require("./config");
+const { Error404, Error500 } = require("./modules/global-errors");
 
 const app = express();
 app.enable("trust proxy", 1);
@@ -68,22 +69,23 @@ app.use(
 app.use(cookieParser("uptime-downtime-monitor"));
 // ====================================================
 
-app.use(express.json({ limit: "10kb" }));
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // ====================== session ======================
 app.use(
   session({
     name: "user_sid", // session_name
     secret: Config.SESSION_SECRET, // secret to sign data
-    proxy: process.env.NODE_ENV == "production" ? true : false,
+    proxy: (process.env.NODE_ENV == "production") ? true : false,
     cookie: {
-      path: "/",
+      path: '/',
       httpOnly: true, // when setting this to true, as compliant clients will not allow client-side JavaScript to see the cookie in document.cookie
       signed: true,
       sameSite: true,
       maxAge: 1 * 24 * 60 * 60 * 1000, // Cookie expires after 1 day(about a semester)
-      secure: process.env.NODE_ENV == "development" ? false : false, //If true, this cookie may only dilivered while https
+      secure: (process.env.NODE_ENV == "development") ? false : false, //If true, this cookie may only dilivered while https
     },
     rolling: true,
     // Forces the session to be saved
@@ -119,6 +121,7 @@ morgan.token("remote-addr", function (req) {
 // log the time taken in each request
 app.use(morgan("tiny"));
 
+
 // ====================== Mongo Sanitize ======================
 // Data sanitization against NoSQL Query injection
 app.use(mongoSanitize()); // prevent from NoSQL injection like (email:{"$gt":""}) in body
@@ -131,13 +134,18 @@ app.use(xxs()); // prevent if code contain html code or js code in body and conv
 //2 sort queries
 app.use(hpp());
 
-
 // ====================== compression =========================
 app.use(compression());
+
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+
+
+
+app.use(Error404);
+app.use(Error500);
 
 module.exports = app;

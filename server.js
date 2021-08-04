@@ -1,7 +1,10 @@
+const mongoose = require("mongoose");
 const http = require("http");
 const fs = require("fs")
+mongoose.Promise = global.Promise;
 require("dotenv").config({ path: "./env/config.env" }); //for config files;
 const Config = require("./config");
+const Logger = require("./utils/logger.js");
 
 
 process.on("uncaughtException", (err, origin) => {
@@ -16,6 +19,16 @@ process.on("uncaughtException", (err, origin) => {
 
 const app = require("./app.js");
 
+
+console.log("Connected ---- connect to cloud DB");
+mongoose.connect(Config.dbURI, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+});
+
+Logger.dbConnection(mongoose);
 
 /**
  * Get port from environment and store in Express.
