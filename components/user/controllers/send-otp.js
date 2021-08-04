@@ -19,7 +19,6 @@ sendVerification = catchAsync(async (req, res, next) => {
     message: "To update email or resend verification please try again later",
   };
 
-
   // if otp next resend time didn't expire
   let otpNextDate = new Date(user.otpNextResendAt);
   let milliseconds = otpNextDate.getTime();
