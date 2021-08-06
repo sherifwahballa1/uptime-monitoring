@@ -7,8 +7,7 @@ const {
   sendVerification,
   verify,
   login,
-  logout,
-  getOtp
+  logout
 } = require("./controllers");
 
 router.post("/signup.json", signup);
@@ -20,6 +19,7 @@ router.post(
   sendVerification
 );
 router.post("/verify.json", Security.validateTempToken, verify);
+
 
 router.post("/logout", logout);
 

@@ -35,7 +35,7 @@ sendVerification = catchAsync(async (req, res, next) => {
   user.updateOtp();
   await user.save();
 
-  await new Email(user, user.otp).sendWelcome();
+  await new Email({ user, otp: user.otp }).sendWelcome();
   timeInSeconds = (user.otpNextResendAt - new Date()) / 1000;
   responseBody.message = "Please Check your Email";
 

@@ -1,28 +1,29 @@
-const nodemailer = require('nodemailer');
-const pug = require('pug');
-const htmlToText = require('html-to-text');
-const config = require('./../config');
+const nodemailer = require("nodemailer");
+const pug = require("pug");
+const htmlToText = require("html-to-text");
+const config = require("./../config");
 
 module.exports = class Email {
-  constructor (user, code) {
+  constructor({ user, code, message }) {
     this.to = user.email;
     this.firstName = user.name;
-    this.code = code;
+    if (message) this.message = message;
+    if (code) this.code = code;
     this.from = config.email.user;
   }
 
-  newTransport () {
+  newTransport() {
     return nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      service: 'gmail',
+      host: "smtp.gmail.com",
+      service: "gmail",
       port: 25,
-      secure: false,// true for 465, false for other ports
+      secure: false, // true for 465, false for other ports
       auth: {
         user: config.email.user,
-        pass: config.email.pass
+        pass: config.email.pass,
       },
       tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
       },
       logger: true,
       debug: false,
@@ -30,12 +31,13 @@ module.exports = class Email {
   }
 
   // send the actual email
-  async send (template, subject) {
+  async send(template, subject) {
     // 1) Render HTML based on pug template
     const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
       firstName: this.firstName,
       code: this.code,
-      subject
+      message: this.message,
+      subject,
     });
     // 2) Define email options
     const mailOptions = {
@@ -43,7 +45,7 @@ module.exports = class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html)
+      text: htmlToText.fromString(html),
       // html:
     };
 
@@ -52,19 +54,16 @@ module.exports = class Email {
       if (error) {
         console.log(error.message);
       } else {
-       // console.log('Send', response.response);
+        // console.log('Send', response.response);
       }
     });
   }
 
-  async sendWelcome () {
-    await this.send('welcome', 'Welcome to Bosta Family!');
+  async sendWelcome() {
+    await this.send("welcome", "Welcome to Bosta Family!");
   }
 
-  async sendPasswordReset () {
-    await this.send(
-      'passwordReset',
-      'Your Password reset code'
-    );
+  async sendPasswordReset() {
+    await this.send("passwordReset", "Your Password reset code");
   }
 };
