@@ -3,8 +3,14 @@ const roleManager = require("./managers/role");
 const tokenManager = require("./managers/token");
 const Config = require("../config");
 
-
 module.exports = {
+  masking(app) {
+    app.use(function (req, res, next) {
+      res.setHeader("X-Powered-By", "PHP/5.1.2");
+      next();
+    });
+  },
+
   async buildToken(user) {
     let userSessionData = await sessionManager.login(user);
     userSessionData = {
@@ -25,9 +31,7 @@ module.exports = {
       try {
         if (!req.headers.authorization)
           req.userData = tokenManager.verify(req.signedCookies.auth_token);
-        else
-          req.userData = tokenManager.verify(req.headers.authorization);
-
+        else req.userData = tokenManager.verify(req.headers.authorization);
 
         if (!roleManager.isRoleAllowed(req, allowedRoles))
           return res
@@ -50,7 +54,9 @@ module.exports = {
       if (!req.headers.authorization)
         return res.status(401).json({ message: "Not authorized user" });
 
-      const tokenDecodedData = tokenManager.verifyTemp(req.headers.authorization);
+      const tokenDecodedData = tokenManager.verifyTemp(
+        req.headers.authorization
+      );
       req.userData = tokenDecodedData;
       next();
     } catch (error) {
@@ -61,10 +67,10 @@ module.exports = {
   setCookies(req, res, token) {
     res.cookie("auth_token", token, {
       httpOnly: true,
-      maxAge: (+Config.tokenValidationInDays) * 24 * 60 * 60 * 1000,
+      maxAge: +Config.tokenValidationInDays * 24 * 60 * 60 * 1000,
       secure: Config.currentEnv == "development" ? false : true,
       signed: true,
       sameSite: true,
     });
-  }
+  },
 };

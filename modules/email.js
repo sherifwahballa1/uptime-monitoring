@@ -25,7 +25,7 @@ module.exports = class Email {
       tls: {
         rejectUnauthorized: false,
       },
-      logger: true,
+      logger: false,
       debug: false,
     });
   }
@@ -61,6 +61,10 @@ module.exports = class Email {
 
   async sendWelcome() {
     await this.send("welcome", "Welcome to Bosta Family!");
+  }
+
+  async monitoringMail() {
+    await this.send("monitor", "Your server status");
   }
 
   async sendPasswordReset() {

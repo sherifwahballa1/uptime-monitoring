@@ -12,7 +12,10 @@ require("colors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
+const Security = require("./security");
 const Config = require("./config");
+const appSeeds = require("./seed");
+const appCrons = require('./crons');
 const { Error404, Error500 } = require("./modules/global-errors");
 
 const { UserAPI } = require("./components/user");
@@ -136,6 +139,8 @@ app.use(xxs()); // prevent if code contain html code or js code in body and conv
 //2 sort queries
 app.use(hpp());
 
+Security.masking(app);
+
 // ====================== compression =========================
 app.use(compression());
 
@@ -144,9 +149,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// for testing webhook
+app.post("/api/key", (req, res, next) => {
+  console.log("YESSSSSSS");
+});
+
 app.use("/api/user", UserAPI);
 app.use("/api/check", CheckAPI);
 app.use("/api/report", ReportAPI);
+
+//seed the application with pre defined data
+// appSeeds();
+
+//activate all cron jobs
+appCrons();
 
 app.use(Error404);
 app.use(Error500);
