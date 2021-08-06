@@ -19,6 +19,7 @@ const User = new mongoose.Schema(
 
 User.index({ email: 1 });
 
+
 // check Password Validation
 User.methods.isPasswordValid = async function (password) {
   return await bcrypt.compare(password, this.password);
@@ -31,6 +32,7 @@ User.query.byEmail = function (email) {
 User.query.byID = function (id) {
   return this.where({ _id: mongoose.Types.ObjectId(id) });
 };
+
 
 User.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -78,10 +80,12 @@ User.methods.updateSubmitOtp = function () {
   if (this.otpSubmitCounter === 5) {
     this.otpSubmitCounter = -1;
     nextResendTime = new Date().getTime() + 30 * blockTimeInMinutes * 60 * 1000;
-  } else nextResendTime = new Date().getTime() + blockTimeInMinutes * 1000; // 1 second
+  } else
+    nextResendTime = new Date().getTime() + blockTimeInMinutes * 1000; // 1 second
 
   this.otpNextResendAt = new Date(nextResendTime);
   this.otpSubmitCounter++;
 };
+
 
 module.exports = mongoose.model("User", User);

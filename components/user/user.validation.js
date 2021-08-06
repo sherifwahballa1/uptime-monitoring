@@ -1,5 +1,6 @@
 const joi = require("joi");
 
+
 const signupSchema = {
   name: joi
     .string()

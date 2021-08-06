@@ -2,7 +2,7 @@ const signup = require("./signup");
 const sendVerification = require("./send-otp");
 const verify = require("./verify");
 const login = require("./login");
-const logout = require("./logout");
+const logout = require('./logout');
 
 module.exports = {
   signup,
@@ -10,4 +10,5 @@ module.exports = {
   verify,
   login,
   logout,
+  getOtp
 };
