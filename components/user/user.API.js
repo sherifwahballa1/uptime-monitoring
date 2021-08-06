@@ -20,7 +20,6 @@ router.post(
 );
 router.post("/verify.json", Security.validateTempToken, verify);
 
-
 router.post("/logout", logout);
 
 module.exports = router;

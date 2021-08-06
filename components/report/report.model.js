@@ -35,7 +35,7 @@ const Report = new mongoose.Schema(
     },
     lastOutages: {
       type: Number,
-      default: 0,
+      default: 1,
     },
     checkId: {
       type: mongoose.Schema.Types.ObjectId,

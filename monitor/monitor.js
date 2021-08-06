@@ -1,5 +1,12 @@
 class Monitor {
-  constructor(check, axios, Email, CheckModule, ReportModule) {
+  constructor(
+    check,
+    axios,
+    Email,
+    CheckModule,
+    ReportModule,
+    pushNotificationService
+  ) {
     this.axios = axios;
 
     this.Email = Email;
@@ -20,6 +27,8 @@ class Monitor {
     this.threshold = check.threshold;
 
     this.check = check;
+
+    this.pushNotificationService = pushNotificationService;
 
     // interval handler
     this.handle = null;
@@ -111,23 +120,33 @@ Monitor.prototype.generateReport = async function (
   if (report.status === "down" && serverRun) {
     let message = `Server: check(${self.check.name}) URL ${self.check.url} is Running status up`;
 
-    report.lastOutages = 0;
+    report.lastOutages = 1;
     // push notifcations
     self.pushNotification(message);
   }
 
   // if down and still down
-  if (
-    (report.status === "down" && !serverRun) ||
-    (report.status === "up" && !serverRun)
-  ) {
+  if (report.status === "up" && !serverRun) {
     report.lastOutages = report.lastOutages + 1;
     if (report.lastOutages === self.check.threshold) {
       let message = `Server: check(${self.check.name}) URL ${self.check.url} is Down status down`;
       // push notifcations
       self.pushNotification(message);
 
-      report.lastOutages = 0;
+      report.lastOutages = 1;
+    }
+  }
+
+  if (
+    report.status === "down" &&
+    !serverRun &&
+    report.lastOutages <= self.check.threshold
+  ) {
+    report.lastOutages = report.lastOutages + 1;
+    if (report.lastOutages === self.check.threshold) {
+      let message = `Server: check(${self.check.name}) URL ${self.check.url} is Down status down`;
+      // push notifcations
+      self.pushNotification(message);
     }
   }
 
@@ -164,9 +183,15 @@ Monitor.prototype.generateReport = async function (
 
 Monitor.prototype.pushNotification = async function (message) {
   let self = this;
-  await new self.Email({ user: self.check.userId, message }).monitoringMail();
+  // await new self.Email({ user: self.check.userId, message }).monitoringMail();
 
-  if (self.check.webhook) await self.webHookNotify();
+  // if (self.check.webhook) await self.webHookNotify();
+  if (
+    self.check.userId.notifications &&
+    self.check.userId.notifications.length > 0
+  ) {
+    self.pushNotificationService(self.check.userId, message);
+  }
 };
 
 Monitor.prototype.webHookNotify = async function () {

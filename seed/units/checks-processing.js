@@ -7,7 +7,7 @@ async function allChecks() {
   let monitors = [];
   let checks = await Check.find({}).populate({
     path: "userId",
-    select: "name email",
+    select: "name email notifications",
   });
 
   checks.forEach(async (check) => {

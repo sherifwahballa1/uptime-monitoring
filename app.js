@@ -15,12 +15,13 @@ const MongoStore = require("connect-mongo");
 const Security = require("./security");
 const Config = require("./config");
 const appSeeds = require("./seed");
-const appCrons = require('./crons');
+const appCrons = require("./crons");
 const { Error404, Error500 } = require("./modules/global-errors");
 
 const { UserAPI } = require("./components/user");
 const { CheckAPI } = require("./components/check");
 const { ReportAPI } = require("./components/report");
+const { FeatureAPI } = require("./components/notify-feature");
 
 const app = express();
 app.enable("trust proxy", 1);
@@ -149,6 +150,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// const x = require("./notifications system");
+// import x from './notifications system'
+// console.log(x);
+
+// let pushO = new Pushover();
+// console.log(pushO.pushNotification());
+
+// let sendG = new Sendgrid();
+// console.log(sendG.pushNotification());
+
 // for testing webhook
 app.post("/api/key", (req, res, next) => {
   console.log("YESSSSSSS");
@@ -157,6 +168,7 @@ app.post("/api/key", (req, res, next) => {
 app.use("/api/user", UserAPI);
 app.use("/api/check", CheckAPI);
 app.use("/api/report", ReportAPI);
+app.use("/api/notify/feature", FeatureAPI);
 
 //seed the application with pre defined data
 // appSeeds();

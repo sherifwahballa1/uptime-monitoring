@@ -1,6 +1,5 @@
 const joi = require("joi");
 
-
 const signupSchema = {
   name: joi
     .string()
@@ -14,17 +13,13 @@ const signupSchema = {
       "any.required": `name is required`,
     }),
 
-  email: joi
-    .string()
-    .required()
-    .email({ minDomainSegments: 2 })
-    .messages({
-      "string.base": `Invalid email`,
-      "string.email": `Invalid email`,
-      "string.empty": `email cannot be an empty field`,
-      "any.required": `email is required`,
-      "string.pattern.base": `Invalid email`,
-    }),
+  email: joi.string().required().email({ minDomainSegments: 2 }).messages({
+    "string.base": `Invalid email`,
+    "string.email": `Invalid email`,
+    "string.empty": `email cannot be an empty field`,
+    "any.required": `email is required`,
+    "string.pattern.base": `Invalid email`,
+  }),
 
   password: joi
     .string()
@@ -40,15 +35,20 @@ const signupSchema = {
       "any.required": `password is required`,
     }),
 
-  phone: joi.string().length(11).pattern(/^[0-9]+$/).message("Invalid Phone Number"),
+  phone: joi
+    .string()
+    .length(11)
+    .pattern(/^[0-9]+$/)
+    .message("Invalid Phone Number")
+    .optional(),
+
+  notifications: joi.array().items(joi.object()).optional(),
 };
 
 const loginSchema = {
   email: joi.string().required().email().message("Invalid email"),
 
-  password: joi
-    .string()
-    .required()
+  password: joi.string().required(),
 };
 
 const otpSchema = {
