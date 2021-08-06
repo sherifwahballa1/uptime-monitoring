@@ -16,6 +16,7 @@ const Config = require("./config");
 const { Error404, Error500 } = require("./modules/global-errors");
 
 const { UserAPI } = require("./components/user");
+const { CheckAPI } = require("./components/check");
 
 const app = express();
 app.enable("trust proxy", 1);
@@ -143,6 +144,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/user", UserAPI);
+app.use("/api/check", CheckAPI);
 
 app.use(Error404);
 app.use(Error500);
