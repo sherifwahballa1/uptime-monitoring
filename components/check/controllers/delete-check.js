@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const createError = require("http-errors")
 const Check = require("../check.model");
+const Report = require("./../../report/report.model");
 
 deleteCheck = async (req, res, next) => {
     try {
@@ -17,6 +18,7 @@ deleteCheck = async (req, res, next) => {
             });
 
         await Check.findByIdAndRemove(checkID);
+        await Report.deleteMany({ checkId: checkID });
 
         return res
             .status(200)

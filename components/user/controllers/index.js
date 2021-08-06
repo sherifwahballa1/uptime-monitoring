@@ -9,6 +9,5 @@ module.exports = {
   sendVerification,
   verify,
   login,
-  logout,
-  getOtp
+  logout
 };

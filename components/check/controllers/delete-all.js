@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Check = require("../check.model");
+const Report = require("./../../report/report.model");
 
 deleteAllCheck = async (req, res, next) => {
     try {
@@ -12,10 +13,14 @@ deleteAllCheck = async (req, res, next) => {
             return res
                 .status(204)
                 .json({ message: "no checks to remove" });
+
+        for (let i = 0; i < allChecks.length; i++) {
+            await Report.deleteMany({ checkId: allChecks[i]._id });
+        }
         
         await Check.deleteMany({ userId });
 
-        
+        // remove all reports
         return res
             .status(200)
             .json({ message: "All checks deleted successfully !" });
