@@ -7,6 +7,7 @@ module.exports = {
 	timeZone: "Africa/Cairo",
 	cronTime: 1,
 	appPushOverToken: "aowxetmn69qp7umvdxe19gs9vy7x75",
+	HOST: process.env.HOST,
 	email: {
 		user: "asc.wargames@gmail.com",
 		pass: "@asc2020"
