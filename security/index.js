@@ -31,7 +31,10 @@ module.exports = {
       try {
         if (!req.headers.authorization)
           req.userData = tokenManager.verify(req.signedCookies.auth_token);
-        else req.userData = tokenManager.verify(req.headers.authorization);
+        else
+          req.userData = tokenManager.verify(
+            req.headers.authorization.split(" ")[1]
+          );
 
         if (!roleManager.isRoleAllowed(req, allowedRoles))
           return res
@@ -55,7 +58,7 @@ module.exports = {
         return res.status(401).json({ message: "Not authorized user" });
 
       const tokenDecodedData = tokenManager.verifyTemp(
-        req.headers.authorization
+        req.headers.authorization.split(" ")[1]
       );
       req.userData = tokenDecodedData;
       next();
