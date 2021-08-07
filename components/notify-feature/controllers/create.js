@@ -5,6 +5,10 @@ const catchAsync = require("../../../utils/catchAsync");
 
 createNewNotificationFeature = async (req, res) => {
   try {
+    let feature = await Notification.findOne({ name: req.body.name });
+    if (feature)
+      return res.status(409).json({ message: "Feature already exists" });
+      
     let newCheck = await Notification.create(req.body);
 
     return res.status(200).send(newCheck);

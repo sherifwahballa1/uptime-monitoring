@@ -1,20 +1,28 @@
-const mongoose = require('mongoose');
 const Check = require("../check.model");
-const createError = require("http-errors");
 const catchAsync = require("../../../utils/catchAsync");
+const { pagination: paginationSchema } = require("../check.validation");
 
 allChecks = catchAsync(async (req, res, next) => {
+  let { error, value } = paginationSchema.validate(req.query, {
+    stripUnknown: true,
+  });
+  if (error)
+    return res.status(400).json({ message: error.message.replace(/"/g, "") });
 
-    const checks = await Check.find({ userId: req.userData._id }).select("-__v -updatedAt");
+  if (!value.limitNo) value.limitNo = 50;
+  if (!value.pageNo) value.pageNo = 0;
 
-    if (checks.length <= 0)
-        return res
-            .status(204)
-            .json({ message: "no checks" });
+  const queryLimitNo = Number.parseInt(value.limitNo);
+  const querySkipNo = Number.parseInt(value.pageNo) * queryLimitNo;
 
-    // get all checks reports
+  const checks = await Check.find({ userId: req.userData._id })
+    .select("-__v -updatedAt")
+    .skip(querySkipNo)
+    .limit(queryLimitNo);
 
-    res.status(200).send(checks);
+  if (checks.length <= 0) return res.status(204).json({ message: "no checks" });
+
+  res.status(200).send(checks);
 });
 
 module.exports = allChecks;

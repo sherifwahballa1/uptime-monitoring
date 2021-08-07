@@ -10,7 +10,7 @@ sendVerification = catchAsync(async (req, res, next) => {
     return res.status(400).json({ message: "Invalid User Id" });
 
   const user = await User.findOne().byID(req.userData._id);
-  if (!user) return next(createError(401, "User is not found"));
+  if (!user) return next(createError(401, "email"));
 
   let timeInSeconds = (user.otpNextResendAt - new Date()) / 1000;
   const responseBody = {
@@ -35,7 +35,7 @@ sendVerification = catchAsync(async (req, res, next) => {
   user.updateOtp();
   await user.save();
 
-  await new Email({ user, otp: user.otp }).sendWelcome();
+  await new Email({ user, code: user.otp }).sendWelcome();
   timeInSeconds = (user.otpNextResendAt - new Date()) / 1000;
   responseBody.message = "Please Check your Email";
 

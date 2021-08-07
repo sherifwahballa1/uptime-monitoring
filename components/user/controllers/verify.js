@@ -3,7 +3,6 @@ const catchAsync = require("../../../utils/catchAsync");
 const User = require("../user.model");
 const { otp: otpSchema } = require("../user.validation");
 const securityModule = require("../../../security");
-const Config = require("../../../config");
 
 verify = catchAsync(async (req, res, next) => {
   // validate all data felids

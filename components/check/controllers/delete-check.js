@@ -7,7 +7,7 @@ deleteCheck = async (req, res, next) => {
   try {
     let checkID = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(checkID))
-      return res.status(404).json({ message: "Invalid check" });
+      return res.status(400).json({ message: "Invalid check" });
 
     let userId = mongoose.Types.ObjectId(req.userData._id);
 

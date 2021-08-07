@@ -1,5 +1,18 @@
 const joi = require("joi");
 
+const paginationSchema = {
+  pageNo: joi
+    .string()
+    .trim()
+    .pattern(/^[0-9]*$/) // find a way to limit the number according to number of documents
+    .message("Enter a valid number"),
+  limitNo: joi
+    .string()
+    .trim()
+    .pattern(/^[0-9]*$/) // find a way to limit the number according to number of documents
+    .message("Enter a valid number"),
+};
+
 const checkSchema = {
   name: joi
     .string()
@@ -171,4 +184,6 @@ const updateCheckSchema = {
 module.exports = {
   checkInfo: joi.object(checkSchema),
   checkUpdate: joi.object(updateCheckSchema),
+  pagination: joi.object(paginationSchema),
+  checkName: joi.object({ checkName: checkSchema.name }),
 };

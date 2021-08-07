@@ -1,16 +1,32 @@
 const Check = require("../check.model");
 const catchAsync = require("../../../utils/catchAsync");
+const { pagination: paginationSchema } = require("../check.validation");
 
 checksByTag = catchAsync(async (req, res, next) => {
+  let { error, value } = paginationSchema.validate(req.query, {
+    stripUnknown: true,
+  });
+  if (error)
+    return res.status(400).json({ message: error.message.replace(/"/g, "") });
 
-    const checks = await Check.find({ userId: req.userData._id, tags: { $in: req.params.tagName } }).select("-__v -updatedAt");
+  if (!value.limitNo) value.limitNo = 50;
+  if (!value.pageNo) value.pageNo = 0;
 
-    if (checks.length <= 0)
-        return res
-            .status(204)
-            .json({ message: "no checks" });
+  const queryLimitNo = Number.parseInt(value.limitNo);
+  const querySkipNo = Number.parseInt(value.pageNo) * queryLimitNo;
 
-    res.status(200).send(checks);
+  const checks = await Check.find({
+    userId: req.userData._id,
+    tags: { $in: req.params.tagName },
+  })
+    .select("-__v -updatedAt")
+    .skip(querySkipNo)
+    .limit(queryLimitNo);
+
+  if (checks.length <= 0)
+    return res.status(200).json({ message: "no checks founded", checks });
+
+  res.status(200).send(checks);
 });
 
 module.exports = checksByTag;
