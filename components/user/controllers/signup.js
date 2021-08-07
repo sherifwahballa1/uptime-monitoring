@@ -10,10 +10,7 @@ signup = catchAsync(async (req, res) => {
     if (error)
       return res.status(400).json({ message: error.message.replace(/"/g, "") });
 
-    let user = await User.findOne({}).or([
-      { email: value.email },
-      { phone: value.phone },
-    ]);
+    let user = await User.findOne({ email: value.email });
 
     if (user && user.email === value.email)
       return res

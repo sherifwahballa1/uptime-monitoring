@@ -4,7 +4,7 @@
   "description": "uptime downtime webhooks monitoring ",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 15000 --exit ./test/**/*.spec.js",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -44,5 +44,11 @@
     "pug": "^3.0.2",
     "swagger-ui-express": "^4.1.6",
     "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "faker": "^5.5.3",
+    "mocha": "^9.0.3",
+    "supertest": "^6.1.4"
   }
 }

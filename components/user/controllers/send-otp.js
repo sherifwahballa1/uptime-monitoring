@@ -10,7 +10,7 @@ sendVerification = catchAsync(async (req, res, next) => {
     return res.status(400).json({ message: "Invalid User Id" });
 
   const user = await User.findOne().byID(req.userData._id);
-  if (!user) return next(createError(401, "email"));
+  if (!user) return next(createError(401, "user not authorized"));
 
   let timeInSeconds = (user.otpNextResendAt - new Date()) / 1000;
   const responseBody = {

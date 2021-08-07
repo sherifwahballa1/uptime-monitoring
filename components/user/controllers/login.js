@@ -21,15 +21,17 @@ login = catchAsync(async (req, res, next) => {
   if (!isPasswordValid)
     return next(createError(401, "Invalid email or password"));
 
-  if (!user.isVerified)
+  if (!user.isVerified) {
+    const token = securityModule.signTempJWT(user);
     return res.status(201).json({
-      temp: user.signTempJWT(),
+      temp: token,
       verified: false,
       message: "Email  not verified please check email address",
     });
+  }
 
   let token = await securityModule.buildToken(user);
-  
+
   req.session.user_sid = { userId: user._id, role: user.role };
   req.session.save();
 

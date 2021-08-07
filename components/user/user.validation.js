@@ -42,7 +42,7 @@ const signupSchema = {
     .message("Invalid Phone Number")
     .optional(),
 
-  notifications: joi.array().items(joi.object()).optional(),
+  notifications: joi.array().items(joi.object().required()).optional(),
 };
 
 const loginSchema = {

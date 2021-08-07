@@ -188,7 +188,7 @@ app.use("/api/notify/feature", FeatureAPI);
 // appSeeds();
 
 //activate all cron jobs
-// appCrons();
+appCrons();
 
 app.use(Error404);
 app.use(Error500);
