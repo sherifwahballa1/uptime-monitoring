@@ -11,6 +11,8 @@ const compression = require("compression");
 require("colors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger-api/swagger.js");
 
 const Security = require("./security");
 const Config = require("./config");
@@ -161,9 +163,21 @@ app.use((req, res, next) => {
 // console.log(sendG.pushNotification());
 
 // for testing webhook
-app.post("/api/key", (req, res, next) => {
-  console.log("YESSSSSSS");
+app.post("/api/webhook", (req, res, next) => {
+  console.log("Welcome Here!");
 });
+
+let options = {
+  explorer: true,
+  customCss: ".swagger-ui",
+};
+
+// Swagger UI
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, options)
+);
 
 app.use("/api/user", UserAPI);
 app.use("/api/check", CheckAPI);
