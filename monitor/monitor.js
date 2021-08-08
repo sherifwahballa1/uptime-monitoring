@@ -118,6 +118,7 @@ Monitor.prototype.generateReport = async function (
 
   // if down and goes up
   if (report.status === "down" && serverRun) {
+    console.log("Down and goes up");
     let message = `Server: check(${self.check.name}) URL ${self.check.url} is Running status up`;
 
     report.lastOutages = 1;
@@ -125,10 +126,9 @@ Monitor.prototype.generateReport = async function (
     self.pushNotification(message);
   }
 
-  // if down and still down
+  // if up and goes down
   if (report.status === "up" && !serverRun) {
-    report.lastOutages = report.lastOutages + 1;
-    if (report.lastOutages === self.check.threshold) {
+    if (report.lastOutages == self.check.threshold) {
       let message = `Server: check(${self.check.name}) URL ${self.check.url} is Down status down`;
       // push notifcations
       self.pushNotification(message);
@@ -147,6 +147,7 @@ Monitor.prototype.generateReport = async function (
       let message = `Server: check(${self.check.name}) URL ${self.check.url} is Down status down`;
       // push notifcations
       self.pushNotification(message);
+      report.lastOutages = 1;
     }
   }
 
@@ -183,9 +184,9 @@ Monitor.prototype.generateReport = async function (
 
 Monitor.prototype.pushNotification = async function (message) {
   let self = this;
-  // await new self.Email({ user: self.check.userId, message }).monitoringMail();
+  await new self.Email({ user: self.check.userId, message }).monitoringMail();
 
-  // if (self.check.webhook) await self.webHookNotify();
+  if (self.check.webhook) await self.webHookNotify();
   if (
     self.check.userId.notifications &&
     self.check.userId.notifications.length > 0
