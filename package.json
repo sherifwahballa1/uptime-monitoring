@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bostaapp/be-assignment.git"
+    "url": "git+https://github.com/sherifwahballa1/uptime-monitoring.git"
   },
   "author": "Sherif",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bostaapp/be-assignment/issues"
+    "url": "https://github.com/sherifwahballa1/uptime-monitoring/issues"
   },
-  "homepage": "https://github.com/bostaapp/be-assignment#readme",
+  "homepage": "https://github.com/sherifwahballa1/uptime-monitoring#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "axios": "^0.21.1",

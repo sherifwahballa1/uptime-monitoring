@@ -5,7 +5,7 @@ module.exports = {
 	tokenValidationInDays: 365,
 	tempTokenDurationInHours: 1,
 	timeZone: "Africa/Cairo",
-	cronTime: 1,
+	cronTime: 5, //run cron jobs every 5 minutes
 	appPushOverToken: "aowxetmn69qp7umvdxe19gs9vy7x75",
 	HOST: process.env.HOST,
 	email: {
