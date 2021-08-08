@@ -1,14 +1,12 @@
 # Uptime Monitoring
 
-![ci](https://github.com/mohllal/notifications-be-challenge/actions/workflows/main.yml/badge.svg)
 
-
-> #### System manages the users's websites to get detailed uptime reports about their availability, average response time, and total uptime/downtime.
+#### System manages the users's websites to get detailed uptime reports about their availability, average response time, and total uptime/downtime.
 
 * `npm install`  
 * `npm start`  
 
->For unit testing
+***For unit testing***
 * `npm run test` 
   
 >The server should run on <span style="color:orange; font-weight: bold;">http://locahost:5000</span>
@@ -22,7 +20,8 @@ ___
 
 ## Specifications
 
-- [RESTful APIs](./api-server/), a Node.js/Express.js server which handles the users and notifications basic CRUD operations.
+- [Swagger](./swagger-api/), All APIs documentation with Swagger.
+  - <span style="color:orange;">http://locahost:5000/api-docs</span>
   
 - RESTful APIs  
   - [RESTful USER APIs](./components/user/user.API.js) User registration(signup, signin, logout, send-otp, verify).
@@ -31,7 +30,7 @@ ___
 
   - [RESTful CHECK APIs](./components/report/report.API.js)
 
-- Crob Jobs:
+- Cron Jobs:
   - Handle all new added or removed checks
   
 - Notification types:
@@ -40,7 +39,7 @@ ___
   
 
 
-"Highway-Access endpoints"
+"Uptime Monitoring Endpoints"
 ## Endpoints
 
 >USER
