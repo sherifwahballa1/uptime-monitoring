@@ -186,13 +186,14 @@ Monitor.prototype.pushNotification = async function (message) {
   let self = this;
   await new self.Email({ user: self.check.userId, message }).monitoringMail();
 
-  if (self.check.webhook) await self.webHookNotify();
   if (
     self.check.userId.notifications &&
     self.check.userId.notifications.length > 0
   ) {
     self.pushNotificationService(self.check.userId, message);
   }
+
+  if (self.check.webhook) await self.webHookNotify();
 };
 
 Monitor.prototype.webHookNotify = async function () {
