@@ -1,59 +1,192 @@
-# Backend Assessment
+# Uptime Monitoring
 
-The main idea of the task is to build an uptime monitoring RESTful API server which allows authorized users to enter URLs they want monitored, and get detailed uptime reports about their availability, average response time, and total uptime/downtime.
+![ci](https://github.com/mohllal/notifications-be-challenge/actions/workflows/main.yml/badge.svg)
 
-## Features
 
-- Sign-up with email verification.
-- Stateless authentication using JWT.
-- Users can create a check to monitor a given URL if it is up or down.
-- Users can edit, pause, or delete their checks if needed.
-- Users may receive a notification on a webhook URL by sending HTTP POST request whenever a check goes down or up.
-- Users should receive email alerts whenever a check goes down or up.
-- Users can get detailed uptime reports about their checks availability, average response time, and total uptime/downtime.
-- Users can group their checks by tags and get reports by tag.
+> #### System manages the users's websites to get detailed uptime reports about their availability, average response time, and total uptime/downtime.
 
-## Acceptance Criteria
+* `npm install`  
+* `npm start`  
 
-- Each check may have the following options:
-  - `name` - The name of the check.
-  - `url` - The URL to be monitored.
-  - `protocol` - The resource protocol name `HTTP`, `HTTPS`, or `TCP`.
-  - `path` - A specific path to be monitored (optional).
-  - `port` - The server port number (optional).
-  - `webhook` - A webhook URL to receive a notification on (optional).
-  - `timeout` (defaults to 5 seconds) - The timeout of the polling request (optional).
-  - `interval` (defaults to 10 minutes) - The time interval for polling requests (optional).
-  - `threshold` (defaults to 1 failure) - The threshold of failed requests that will create an alert (optional).
-  - `authentication` - An HTTP authentication header, with the Basic scheme, to be sent with the polling request (optional).
-    - `authentication.username`
-    - `authentication.password`
-  - `httpHeaders` - A list of key/value pairs custom HTTP headers to be sent with the polling request (optional).
-  - `assert` - The response assertion to be used on the polling response (optional).
-    - `assert.statusCode`: An HTTP status code to be asserted.
-  - `tags` - A list of the check tags (optional).
-  - `ignoreSSL` - A flag to ignore broken/expired SSL certificates in case of using the HTTPS protocol.
+>For unit testing
+* `npm run test` 
+  
+>The server should run on <span style="color:orange; font-weight: bold;">http://locahost:5000</span>
 
-- Each report may have the following information:
-  - `status` - The current status of the URL.
-  - `availability` - A percentage of the URL availability.
-  - `outages` - The total number of URL downtimes.
-  - `downtime` - The total time, in seconds, of the URL downtime.
-  - `uptime` - The total time, in seconds, of the URL uptime.
-  - `responseTime` - The average response time for the URL.
-  - `history` - Timestamped logs of the polling requests.
+___
+![alt text][logo]
 
-## Expectations
 
-- Code quality.
-- Code scalability as we should be able to add a new alerting notification channel like Slack, Firebase, SMS, etc.. with the minimum possible changes.
-- Unit tests.
+[logo]: https://bosta.co/wp-content/uploads/2019/08/bosta_logo_en_red.svg
 
-## Bonus
 
-- Swagger API documentation.
-- Code linting.
-- Docker.
-- [Pushover](https://pushover.net/) integration to receive alerts on mobile devices.
+## Specifications
 
-Try your best to implement as much as you can from the given features and feel free to add more if you want to.
+- [RESTful APIs](./api-server/), a Node.js/Express.js server which handles the users and notifications basic CRUD operations.
+  
+- RESTful APIs  
+  - [RESTful USER APIs](./components/user/user.API.js) User registration(signup, signin, logout, send-otp, verify).
+  
+  - [RESTful CHECK APIs](./components/check/check.API.js) Check (create, delete, pausse, get, edit).
+
+  - [RESTful CHECK APIs](./components/report/report.API.js)
+
+- Crob Jobs:
+  - Handle all new added or removed checks
+  
+- Notification types:
+  - Email
+  - Push notifications (pushover)
+  
+
+
+"Highway-Access endpoints"
+## Endpoints
+
+>USER
+
+  - `POST /api/user/signup.json` (creating new user...) 
+    
+    **payload**
+      ```json
+      {
+          "name": "user name",
+          "email": "user email",
+          "password": "user passowrd"
+      }
+      ```
+
+   
+  ___
+
+- `POST /api/user/login.json` (user login)
+  
+    **payload**  
+    ```json
+    {
+        "email": "user email",
+        "password": "user passowrd"
+    }
+    ```
+___
+
+- `POST /api/user/verification-code.json` (send verification code)  
+
+___
+
+- `POST /api/user/verify.json` (verify otp)
+  
+    **payload**  
+    ```json
+    {
+        "otp": "code",
+    }
+    ```
+___
+
+- `POST /api/user/logout` (logout)
+
+  
+___
+
+
+>CHECK
+
+  - `POST /api/check` (creating new check...) 
+    
+    **payload**
+      ```json
+      {
+           "name": "checkName",
+            "url": "check url",
+            "path": "check path",
+            "method": "check method",
+            "protocol": "check protocol",
+            "interval": "check interval",
+            "webhook": "check webhook",
+            "tags": "check tags",
+            "timeout": "check timeout",
+            "threshold": "check threshold",
+            "port": "check port",
+            "ignoreSSL": "check ignoreSSL"
+      }
+      ```
+ 
+___
+
+ - `PATCH /api/check/${id}` (update check...) 
+    
+    **payload**
+      ```json
+      {
+           "name": "checkName",
+            "url": "check url",
+            "path": "check path",
+            "method": "check method",
+            "protocol": "check protocol",
+            "interval": "check interval",
+            "webhook": "check webhook",
+            "tags": "check tags",
+            "timeout": "check timeout",
+            "threshold": "check threshold",
+            "port": "check port",
+            "ignoreSSL": "check ignoreSSL"
+      }
+      ```
+___
+
+- `GET /api/check/` (get all checks) 
+   
+    **Query params**
+
+     * <span style="font-weight: 500; color: orange;">`pageNo` : </span> Used for pagination (default 0 if user not provid in request)
+     * <span style="font-weight: 500; color: orange;">`limitNo` : </span> (optional with default 50 per request if user not set)
+___
+
+- `GET /api/check/tag/${tagName}` (get checks by tagName) 
+   
+    **`Query params`**
+
+    * <span style="font-weight: 500; color: orange;">`tagName` : </span> (The tagName need to get all checks info)
+___
+
+___
+
+- `GET /api/check/${checkId}` (get checks by id) 
+   
+    **`Query params`**
+
+    * <span style="font-weight: 500; color: orange;">`checkId` : </span> (The check ID need to get all check info)
+___
+
+- `GET /api/check/name/${checkName}` (get check by name) 
+   
+    **`Query params`**
+
+    * <span style="font-weight: 500; color: orange;">`checkName` : </span> (The check Name need to get check info)
+___
+
+- `DELETE /api/check/all` (remove all checks) 
+
+___
+
+- `DELETE /api/check/tag/${tagName}` (remove all checks by tagName)
+      **`Query params`**
+
+    * <span style="font-weight: 500; color: orange;">`tagName` : </span> (The tagName need to remove all checks info)
+
+___
+
+- `DELETE /api/check/${id}` (remove check by id)
+      **`Query params`**
+
+    * <span style="font-weight: 500; color: orange;">`id` : </span> (The id need to remove check info)
+
+
+## Technologies
+
+- [MongoDB](https://www.mongodb.com/)
+- [GitHub Actions](https://github.com/features/actions)
+- [Node.js](https://nodejs.org/)
+- [Swagger](https://swagger.io/)
+- [PushOver](https://pushover.net/)
