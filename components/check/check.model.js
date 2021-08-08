@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Check = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     url: { type: String, required: true },
     method: {
       type: String,

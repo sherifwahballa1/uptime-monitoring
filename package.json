@@ -48,6 +48,7 @@
   "devDependencies": {
     "chai": "^4.3.4",
     "faker": "^5.5.3",
+    "flush-cache": "^1.0.1",
     "mocha": "^9.0.3",
     "supertest": "^6.1.4"
   }

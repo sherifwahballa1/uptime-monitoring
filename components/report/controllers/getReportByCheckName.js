@@ -16,7 +16,7 @@ ReportsByCheckName = catchAsync(async (req, res, next) => {
 
   const reports = await Report.find({
     checkId: mongoose.Types.ObjectId(check._id),
-  });
+  }).populate("checkId");
 
   if (reports.length <= 0)
     return res.status(404).json({ message: "no reports founded" });

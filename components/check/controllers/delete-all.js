@@ -11,7 +11,7 @@ deleteAllCheck = async (req, res, next) => {
     );
 
     if (allChecks.length <= 0)
-      return res.status(409).json({ message: "no checks to remove" });
+      return res.status(200).json({ message: "no checks to remove" });
 
     for (let i = 0; i < allChecks.length; i++) {
       await Report.deleteMany({ checkId: allChecks[i]._id });

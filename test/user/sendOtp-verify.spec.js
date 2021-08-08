@@ -4,6 +4,7 @@ const faker = require("faker");
 const app = require("../../app");
 require("mocha");
 const { expect, should } = chai;
+const flush = require("flush-cache");
 
 const request = require("supertest").agent(app);
 const User = require("./../../components/user/user.model");
@@ -68,6 +69,7 @@ describe("Send OTP and Verify it", () => {
 
     // close server and clear cache
     server.close();
+    flush();
     delete require.cache[require.resolve("./../../server")];
     done();
   });

@@ -13,7 +13,7 @@ ReportsByCheckID = catchAsync(async (req, res, next) => {
   const check = await Check.findOne({
     _id: checkID,
     userId: mongoose.Types.ObjectId(req.userData._id),
-  });
+  }).populate("checkId");
 
   if (!check) return next(createError(404, "Check not found"));
 

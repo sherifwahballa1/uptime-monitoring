@@ -20,7 +20,8 @@ allChecks = catchAsync(async (req, res, next) => {
     .skip(querySkipNo)
     .limit(queryLimitNo);
 
-  if (checks.length <= 0) return res.status(204).json({ message: "no checks" });
+  if (checks.length <= 0)
+    return res.status(200).json({ message: "no checks", checks: [] });
 
   res.status(200).send(checks);
 });

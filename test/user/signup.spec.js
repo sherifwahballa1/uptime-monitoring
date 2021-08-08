@@ -2,6 +2,7 @@ const chai = require("chai");
 const app = require("../../app");
 const { expect, should } = chai;
 require("mocha");
+const flush = require("flush-cache");
 const request = require("supertest").agent(app);
 const faker = require("faker");
 const Feature = require("./../../components/notify-feature/notify-feature.model");
@@ -36,6 +37,7 @@ describe("Registration", () => {
 
     // close server and clear cache
     server.close();
+    flush();
     delete require.cache[require.resolve("./../../server")];
     done();
   });

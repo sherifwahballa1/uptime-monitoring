@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const faker = require("faker");
 const app = require("../../app");
 require("mocha");
+const flush = require("flush-cache");
 const { expect, should } = chai;
 
 const request = require("supertest").agent(app);
@@ -37,6 +38,7 @@ describe("Login", () => {
     });
 
     // close server and clear cache
+    flush();
     server.close();
     delete require.cache[require.resolve("./../../server")];
     done();

@@ -18,7 +18,7 @@ reportsByTag = catchAsync(async (req, res, next) => {
 
   const reports = await Report.find({
     checkId: { $in: checksIds },
-  });
+  }).populate("checkId");
 
   return res.status(200).send(reports);
 });
